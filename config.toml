@@ -1,0 +1,22 @@
+languageCode = 'en-us'
+title = 'Development Hell'
+theme = "terminal"
+paginate = 5
+relativeURLs = false
+
+[params]
+author = "Rafe Hall"
+contentTypeName = "posts"
+colorScheme = "orange"
+fullWidthTheme = false
+centerTheme = true
+
+title = "Development Hell"
+subtitle = "Development Hell"
+menuMore = "Show More"
+readMore = "Read More"
+readOtherPosts = "Read Other"
+newerPosts = "Newer"
+olderPosts = "Older"
+missingContentMessage = "Not Found..."
+missingBackButtonLabel = "Go Back"
