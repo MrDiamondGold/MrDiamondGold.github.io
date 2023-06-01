@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Development Hell</title>
+    <link>/</link>
+    <description>Recent content on Development Hell</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Introduction</title>
+      <link>/posts/introductions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/introductions/</guid>
+      <description>About Me Project History // 2023 Non-photorealistic rendering material with a cell-shading inspiration.
+gdshaderMaterial Shader Codeshader_type spatial;render_mode depth_draw_opaque, diffuse_toon, specular_disabled;const float INV_PI = 1.0 / PI;global uniform sampler2D light_ramp: source_color, hint_default_white, repeat_disable, filter_linear;uniform bool use_max_light = false;uniform float rim_theshhold = 0.5;uniform vec3 rim_color: source_color = vec3(0.01, 0.01, 0.01);uniform float specular_power = 8.0;uniform vec3 specular_color: source_color = vec3(1.0);uniform vec2 texture_scale = vec2(1.</description>
+      <content>&lt;h2 id=&#34;about-me&#34;&gt;About Me&lt;/h2&gt;
+&lt;h2 id=&#34;project-history&#34;&gt;Project History&lt;/h2&gt;
+&lt;h3 id=&#34;-2023&#34;&gt;// 2023&lt;/h3&gt;
+&lt;p&gt;Non-photorealistic rendering material with a cell-shading inspiration.&lt;/p&gt;
+&lt;p&gt;
+  &lt;img src=&#34;win64-4b9-editor_w9xUYhIh2Y.png&#34;  alt=&#34;Stylized render&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
+
+
+
+
+
+  &lt;div class=&#34;collapsable-code&#34;&gt;
+    &lt;input id=&#34;1&#34; type=&#34;checkbox&#34; checked /&gt;
+    &lt;label for=&#34;1&#34;&gt;
+      &lt;span class=&#34;collapsable-code__language&#34;&gt;gdshader&lt;/span&gt;
+      &lt;span class=&#34;collapsable-code__title&#34;&gt;Material Shader Code&lt;/span&gt;
+      &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;Show&#34; data-label-collapse=&#34;Hide&#34;&gt;&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;pre class=&#34;language-gdshader&#34; &gt;&lt;code&gt;
+shader_type spatial;
+render_mode depth_draw_opaque, diffuse_toon, specular_disabled;
+
+const float INV_PI = 1.0 / PI;
+
+global uniform sampler2D light_ramp: source_color, hint_default_white, repeat_disable, filter_linear;
+
+uniform bool use_max_light = false;
+
+uniform float rim_theshhold = 0.5;
+uniform vec3 rim_color: source_color = vec3(0.01, 0.01, 0.01);
+
+uniform float specular_power = 8.0;
+uniform vec3 specular_color: source_color = vec3(1.0);
+
+uniform vec2 texture_scale = vec2(1.0);
+
+uniform sampler2D albedo_texture: source_color, hint_default_white;
+uniform vec3 albedo_color: source_color = vec3(1.0);
+
+uniform vec3 emission: source_color = vec3(0.0);
+uniform float emission_strength = 1.0;
+
+uniform sampler2D normal_texture;
+
+void fragment() {
+	METALLIC = 0.0;
+	ROUGHNESS = 0.5;
+	
+	float rim = 1.0 - dot(VIEW, NORMAL);
+	float rim_strength = float(rim &amp;gt; rim_theshhold);
+	vec3 rim_col = texture(light_ramp, vec2(rim_strength, 0.0)).rgb * rim_color;
+	
+	vec4 albedo = texture(albedo_texture, UV * texture_scale) * vec4(albedo_color, 1.0);
+	vec3 vertex_color = COLOR.rgb;
+	
+	vec3 color = mix(vertex_color, albedo.rgb, 1.0 - albedo.a);
+	
+	ALBEDO = color - rim_col;
+	
+	vec3 normal = texture(normal_texture, UV * texture_scale).xyz;
+	if (length(normal) &amp;lt; 0.99) {
+		NORMAL_MAP = normal;
+	}
+	
+	EMISSION = emission * emission_strength;
+}
+
+void light() {
+	vec3 light = normalize(LIGHT);
+	vec3 normal = normalize(NORMAL);
+	vec3 view = normalize(VIEW);
+	
+	highp float specular_number = 0.999;
+	vec3 reflected = reflect(-light, normal);
+	float spec = dot(view, reflected);
+	spec = float(spec &amp;gt; pow(specular_number, specular_power)) * ATTENUATION;
+	
+	float diffuse_strength = ((dot(light, normal) &amp;#43; 1.0) * 0.5) * ATTENUATION;
+	vec3 diff = texture(light_ramp, vec2(diffuse_strength, 0.0)).rgb;
+	diff *= LIGHT_COLOR * INV_PI;
+	
+	vec3 specular = spec * specular_color * LIGHT_COLOR * INV_PI;
+	
+	if (use_max_light) {
+		DIFFUSE_LIGHT = max(diff, DIFFUSE_LIGHT);
+		SPECULAR_LIGHT = max(specular, SPECULAR_LIGHT);
+	} else {
+		DIFFUSE_LIGHT &amp;#43;= diff;
+		SPECULAR_LIGHT &amp;#43;= specular;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Simon Says in C using SFML in 564 loc &lt;a href=&#34;https://github.com/MrDiamondGold/SimonSays&#34;&gt;here on github&lt;/a&gt;.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;-2022&#34;&gt;// 2022&lt;/h3&gt;
+&lt;p&gt;Side on 2D platformer game made in seven days for the kajam 2022 game jam about a man dreaming about making the spiciest hoagie he&amp;rsquo;s ever had, &lt;a href=&#34;https://replit.com/@RafeHall/Once-Upon-a-Hoagie?v=1&#34;&gt;play online&lt;/a&gt; at repl.it, or look at the code on &lt;a href=&#34;https://github.com/MrDiamondGold/once_upon_a_hoagie&#34;&gt;github&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;
+  &lt;img src=&#34;5dgyzjzm.bmp&#34;  alt=&#34;Screenshot of game jam game called Once Upon a Hoagie&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
+
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;-2021&#34;&gt;// 2021&lt;/h3&gt;
+&lt;p&gt;Top down 3D horror game about an autonomous mining drone following directives as aliens roam the complex, &lt;a href=&#34;https://mrdg.itch.io/miner-incident&#34;&gt;play online&lt;/a&gt; at itch.io or look at the code on &lt;a href=&#34;https://github.com/MrDiamondGold/miner_incident&#34;&gt;github&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;
+  &lt;img src=&#34;31o5fg5k.bmp&#34;  alt=&#34;Screenshot of game jam game called Miner Incident&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
+
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;-2015-late-2019-to-early-2020&#34;&gt;// 2015, Late 2019 to Early 2020&lt;/h3&gt;
+&lt;p&gt;A backup version of my first proper godot project and various projects made throughout late 2019 being showcased.
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/_ixf2-52XOs&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

@@ -3,6 +3,7 @@ title = 'Development Hell'
 theme = "terminal"
 paginate = 5
 relativeURLs = false
+publishDir = "docs"
 
 [params]
 author = "Rafe Hall"
